@@ -39,7 +39,6 @@ type
     |   Void
     ;
 
-
 parameter_list
     :   nemp_paramerter_list
     |   empty_statment
@@ -143,6 +142,8 @@ Comma:                  ',';
 ID:                     Letter (Letter | Digit | UnderScore)*;
 NUMBER:                 MINUS? ( Digit |  NonZero Digit+ );
 REAL_N:                 NUMBER Dot NUMBER;
+
+/* Fragments */
 
 fragment A:             'a'  |  'A';
 fragment B:             'b'  |  'B';

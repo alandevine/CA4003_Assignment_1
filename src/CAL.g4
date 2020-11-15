@@ -5,7 +5,8 @@ grammar CAL;
 
 
 prog
-    :   decl_list function_list main;
+    :   decl_list function_list main
+    ;
 
 decl_list
     :   decl SemiColon decl_list
@@ -18,11 +19,12 @@ decl
     ;
 
 var_decl
-    :   Variable ID Colon type;
+    :   Variable ID Colon type
+    ;
+
 const_decl
     :   <assoc=right> Constant ID Colon type ASSIGNMENT expression
     ;
-
 
 function_list
     :   function function_list
@@ -30,7 +32,11 @@ function_list
     ;
 
 function
-    :   type ID O_Paren parameter_list C_Paren Is decl_list Begin statement_block Return O_Paren ( expression | empty_statment ) C_Paren SemiColon End
+    :   type ID O_Paren parameter_list C_Paren Is
+        decl_list
+        Begin
+        statement_block
+        Return O_Paren ( expression | empty_statment ) C_Paren SemiColon End
     ;
 
 type
@@ -143,6 +149,33 @@ ID:                     Letter (Letter | Digit | UnderScore)*;
 NUMBER:                 MINUS? ( Digit |  NonZero Digit+ );
 REAL_N:                 NUMBER Dot NUMBER;
 
+/* Syntax Tokens*/
+
+O_Brace:                '{';
+C_Brace:                '}';
+O_Bracket:              '[';
+C_Bracket:              ']';
+O_Paren:                '(';
+C_Paren:                ')';
+
+/* Aritmetic Opperators */
+
+MINUS:                  '-';
+PLUS:                   '+';
+
+/* Logical Operators */
+
+ASSIGNMENT:             ':=';
+NOT:                    '~';
+OR:                     '|';
+AND:                    '&';
+EQUAL:                  '=';
+NOTEQUAL:               '!=';
+LT:                     '<';
+LTE:                    '<=';
+GT:                     '>';
+GTE:                    '>=';
+
 /* Fragments */
 
 fragment A:             'a'  |  'A';
@@ -173,34 +206,7 @@ fragment NonZero:       [1-9];
 fragment UnderScore:    '_';
 fragment Dot:           '.';
 
-/* Syntax Tokens*/
-
-O_Brace:                '{';
-C_Brace:                '}';
-O_Bracket:              '[';
-C_Bracket:              ']';
-O_Paren:                '(';
-C_Paren:                ')';
-
-/* Aritmetic Opperators */
-
-MINUS:                  '-';
-PLUS:                   '+';
-
-/* Logical Operators */
-
-ASSIGNMENT:             ':=';
-NOT:                    '~';
-OR:                     '|';
-AND:                    '&';
-EQUAL:                  '=';
-NOTEQUAL:               '!=';
-LT:                     '<';
-LTE:                    '<=';
-GT:                     '>';
-GTE:                    '>=';
-
 /* Skips */
-
+COMMENT_ML:             '/*' (COMMENT_ML|.)*? '*/' -> skip;
+COMMENT_SL:             '//' .*? '\n' -> skip;
 WS:                     [ \t\n\r]+ -> skip;
-COMMENT:                ( '//' .*? '\n' | ( '/*' (. | '\n')*? '*/' ))  -> skip;
